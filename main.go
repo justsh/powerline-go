@@ -58,6 +58,7 @@ type args struct {
 	ShortenGKENames       *bool
 	ShortenEKSNames       *bool
 	ShellVar              *string
+	ShellVarQuiet         *string
 	PathAliases           *string
 	Duration              *string
 	Eval                  *bool
@@ -125,6 +126,7 @@ var modules = map[string]func(*powerline){
 	"perms":               segmentPerms,
 	"root":                segmentRoot,
 	"shell-var":           segmentShellVar,
+	"shell-var-quiet":     segmentShellVarQuiet,
 	"ssh":                 segmentSsh,
 	"termtitle":           segmentTermTitle,
 	"terraform-workspace": segmentTerraformWorkspace,
@@ -238,6 +240,10 @@ func main() {
 			"shell-var",
 			"",
 			comments("A shell variable to add to the segments.")),
+		ShellVarQuiet: flag.String(
+			"shell-var-quiet",
+			"",
+			comments("A shell variable to add to the segments. The segment will only show when the variable exists")),
 		PathAliases: flag.String(
 			"path-aliases",
 			"",

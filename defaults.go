@@ -20,7 +20,8 @@ var symbolTemplates = map[string]Symbols{
 	},
 	"patched": {
 		Lock:                 "\uE0A2",
-		Network:              "\uE0A2",
+		//Network:              "\\[\xf0\x9f\x90\x9a\\]",
+		Network:              "\u00A7",
 		Separator:            "\uE0B0",
 		SeparatorThin:        "\uE0B1",
 		SeparatorReverse:     "\uE0B2",

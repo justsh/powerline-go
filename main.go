@@ -58,7 +58,7 @@ type args struct {
 	ShortenGKENames       *bool
 	ShortenEKSNames       *bool
 	ShellVar              *string
-	ShellVarQuiet         *string
+	ShellVarPlus          *string
 	PathAliases           *string
 	Duration              *string
 	Eval                  *bool
@@ -126,7 +126,7 @@ var modules = map[string]func(*powerline){
 	"perms":               segmentPerms,
 	"root":                segmentRoot,
 	"shell-var":           segmentShellVar,
-	"shell-var-quiet":     segmentShellVarQuiet,
+	"shell-var-plus":     segmentShellVarPlus,
 	"ssh":                 segmentSsh,
 	"termtitle":           segmentTermTitle,
 	"terraform-workspace": segmentTerraformWorkspace,
@@ -194,19 +194,19 @@ func main() {
 				"(valid choices: bare, bash, zsh)")),
 		Modules: flag.String(
 			"modules",
-			"nix-shell,venv,user,host,ssh,cwd,perms,git,hg,jobs,exit,root,vgo",
+			"shell-var-plus,nix-shell,venv,user,host,ssh,cwd,perms,git,hg,jobs,exit,root,vgo",
 			commentsWithDefaults("The list of modules to load, separated by ','",
-				"(valid choices: aws, cwd, docker, dotenv, duration, exit, git, gitlite, hg, host, jobs, kube, load, newline, nix-shell, node, perlbrew, perms, root, shell-var, ssh, svn, termtitle, terraform-workspace, time, user, venv, vgo)")),
+				"(valid choices: aws, cwd, docker, dotenv, duration, exit, git, gitlite, hg, host, jobs, kube, load, newline, nix-shell, node, perlbrew, perms, root, shell-var, shell-var-plus, ssh, svn, termtitle, terraform-workspace, time, user, venv, vgo)")),
 		ModulesRight: flag.String(
 			"modules-right",
 			"",
 			comments("The list of modules to load anchored to the right, for shells that support it, separated by ','",
-				"(valid choices: aws, cwd, docker, dotenv, duration, exit, git, gitlite, hg, host, jobs, kube, load, newline, nix-shell, node, perlbrew, perms, root, shell-var, ssh, svn, termtitle, terraform-workspace, time, user, venv, vgo)")),
+				"(valid choices: aws, cwd, docker, dotenv, duration, exit, git, gitlite, hg, host, jobs, kube, load, newline, nix-shell, node, perlbrew, perms, root, shell-var, shell-var-plus, ssh, svn, termtitle, terraform-workspace, time, user, venv, vgo)")),
 		Priority: flag.String(
 			"priority",
-			"root,cwd,user,host,ssh,perms,git-branch,git-status,hg,jobs,exit,cwd-path",
+			"root,shell-var-plus,cwd,user,host,ssh,perms,git-branch,git-status,hg,jobs,exit,cwd-path",
 			commentsWithDefaults("Segments sorted by priority, if not enough space exists, the least priorized segments are removed first. Separate with ','",
-				"(valid choices: aws, cwd, docker, dotenv, duration, exit, git, gitlite, hg, host, jobs, kube, load, newline, nix-shell, node, perlbrew, perms, root, shell-var, ssh, svn, termtitle, terraform-workspace, time, user, venv, vgo)")),
+				"(valid choices: aws, cwd, docker, dotenv, duration, exit, git, gitlite, hg, host, jobs, kube, load, newline, nix-shell, node, perlbrew, perms, root, shell-var, shell-var-plus, ssh, svn, termtitle, terraform-workspace, time, user, venv, vgo)")),
 		MaxWidthPercentage: flag.Int(
 			"max-width",
 			0,
@@ -240,10 +240,15 @@ func main() {
 			"shell-var",
 			"",
 			comments("A shell variable to add to the segments.")),
-		ShellVarQuiet: flag.String(
-			"shell-var-quiet",
+		ShellVarPlus: flag.String(
+			"shell-var-plus",
 			"",
-			comments("A shell variable to add to the segments. The segment will only show when the variable exists")),
+			comments("A shell variable to add to the segments.",
+				"The segment can be customized using POWERLINE_SEGMENT_SHELLVAR_* environment variables.",
+				"POWERLINE_SEGMENT_SHELLVAR: sets the content of the segment.",
+				"POWERLINE_SEGMENT_SHELLVAR_FG: sets the foreground color of the segment.",
+				"POWERLINE_SEGMENT_SHELLVAR_BG: sets the background color of the segment.",
+				"POWERLINE_SEGMENT_SHELLVAR_QUIET: does not throw a warning if the variable does not exist.")),
 		PathAliases: flag.String(
 			"path-aliases",
 			"",
